@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration form</title>
+</head>
+<body>
+<main>
+    <script type="text/javascript" th:src="@{/registerscript.js}"></script>
+    <h1>Register</h1>
+    <section class = "registration">
+        <form th:action="@{register}" method="post" th:object="${newUser}">
+                <legend>User Information</legend>
+                <table id = "registrationForm">
+                    <td><label>Account type:</label></td>
+                    <td>
+                        <select id="role" name="role" onchange="addFields()">
+                            <!-- empty option from https://stackoverflow.com/questions/3518002/how-can-i-set-the-default-value-for-an-html-select-element -->
+                            <option selected disabled hidden>Choose user type</option>
+                            <option th:value="Customer">Customer</option>
+                            <option th:value="Restaurant">Restaurant</option>
+                        </select>
+                    </td>
+                    <tr>
+                        <td><label>Email:</label></td>
+                        <td><input type="email" th:field="*{email}"/></td>
+                    </tr>
+                    <tr>
+                        <td><label>Password:</label></td>
+                        <td><input type="password" minlength="6" th:field="*{password}"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Register"/></td>
+                    </tr>
+                </table>
+
+
+        </form>
+    </section>
+</main>
+
+</body>
+</html>
