@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile form</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"  href="../static/css/bootstrap.min.css" />
+  <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+  <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand">Reservation system</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-end" id="navbar">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/restaurantProfile}">Restaurant profile</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/}">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main>
+  <h1 class="text-center">Restaurant profile</h1>
+  <div class="d-flex justify-content-md-start align-items-center container ">
+
+    <form class="row" th:action="@{restaurantProfile}" method="post" th:object="${editProfile}">
+      <div class="form-group">
+        <label>Add a photo:</label>
+        <input type="file" class="form-control-file"/>
+      </div>
+          <div class="form-group w-75">
+          <label>Restaurant name</label>
+          <input class="form-control" type="text" th:field="*{restaurantName}"/>
+          </div>
+       <div class="form-group w-75">
+        <label>Description</label>
+          <textarea class="form-control" type="text" th:field="*{description}">This restaurant is...</textarea>
+       </div>
+      <div class="form-group w-75">
+          <label>Address</label>
+          <input class="form-control" type="text" th:field="*{address}"/>
+      </div>
+          <input class="btn btn-primary btn-customized w-25" type="submit" value="Save page"/>
+    </form>
+  </div>
+</main>
+
+</body>
+</html>

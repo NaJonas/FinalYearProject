@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,11 +32,24 @@ public class HomeController {
         String username = userDetails.getUsername();
         if (customerUserRepository.findById(username).isPresent()){
             System.out.println("Customer logged in");
-            response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/register"));
+            response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/"));
         }
         else if (restaurantUserRepository.findById(username).isPresent()){
             System.out.println("Restaurant logged in");
-            response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/"));
+            response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/restaurantProfile"));
         }
+    }
+
+
+    // Restaurant profile for the customers to see
+    @RequestMapping(value="/restaurantInfo", method = RequestMethod.GET)
+    public ModelAndView showRestaurantPage(){
+        return new ModelAndView("restaurantInfo");
+    }
+
+    // Listing all restaurants in a page
+    @RequestMapping(value="/restaurantList", method = RequestMethod.GET)
+    public ModelAndView showRestaurants(){
+        return new ModelAndView("restaurantList", "restaurants", restaurantUserRepository.findAll());
     }
 }
