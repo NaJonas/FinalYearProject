@@ -1,31 +1,37 @@
 package com.navikas.finalyear.entities;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
-
 public class CustomerUser extends User {
-    @NotNull
     private String surname;
-    @NotNull
     private String name;
+    @OneToMany(mappedBy = "customer")
+    private List<Reservation> reservationList;
 
-    public CustomerUser(String email, String password, String name, String surname) {
+    public CustomerUser(String email, String password, String name, String surname, List<Reservation> reservationList) {
         super(email, password);
         this.name = name;
         this.surname = surname;
+        this.reservationList = reservationList;
     }
 
 
 
     public CustomerUser() {
 
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 
     public String getName() {

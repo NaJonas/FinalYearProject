@@ -18,9 +18,14 @@ public class RestaurantUser extends User{
     private String address;
     @OneToMany(mappedBy = "restaurantUser")
     private List<MenuSection> menuSectionList;
+    @OneToMany(mappedBy = "restaurant")
+    private List<Tables> tablesList;
+    @OneToMany(mappedBy = "restaurant")
+    private List<Reservation> reservationList;
 
 
-    public RestaurantUser(String email, String password, String companyName, Boolean isAuthorized, String restaurantName, String description, String address, List<MenuSection> menuSections) {
+    public RestaurantUser(String email, String password, String companyName, Boolean isAuthorized, String restaurantName, String description, String address, List<MenuSection> menuSections,
+                            List<Tables> tablesList, List<Reservation> reservationList) {
         super(email, password);
         this.companyName = companyName;
         this.isAuthorized = isAuthorized;
@@ -28,6 +33,16 @@ public class RestaurantUser extends User{
         this.description = description;
         this.address = address;
         this.menuSectionList = menuSections;
+        this.tablesList = tablesList;
+        this.reservationList = reservationList;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 
     public String getRestaurantName() {
@@ -66,6 +81,7 @@ public class RestaurantUser extends User{
 
     }
 
+
     public String getCompanyName() {
         return companyName;
     }
@@ -80,6 +96,14 @@ public class RestaurantUser extends User{
 
     public void setAuthorized(Boolean authorized) {
         isAuthorized = authorized;
+    }
+
+    public List<Tables> getTablesList() {
+        return tablesList;
+    }
+
+    public void setTablesList(List<Tables> tablesList) {
+        this.tablesList = tablesList;
     }
 }
 

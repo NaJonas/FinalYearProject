@@ -6,8 +6,6 @@ import javax.persistence.*;
 
 @MappedSuperclass
 // Main user entity
-//@Entity
-//@Table(name = "User", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
     @Id
     private String email;

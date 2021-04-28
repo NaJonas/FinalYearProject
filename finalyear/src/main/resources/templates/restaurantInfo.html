@@ -41,16 +41,22 @@
         }
     </style>
     <div class="container py-5">
+        <p class="alert-danger" th:text="${error}" th:if="${error}"></p>
     <div class="jumbotron min-height bg-image" style="background-image: url('../static/temp.jpeg');" th:style="'background:url(' + @{/temp.jpeg} + ');'">
 
     </div>
-        <h1 class="mb-3">Restaurant name</h1>
-        <h4 class="mb-3">Kensington street 12, London</h4>
-        <p>Aguaviva specializes in the freshest fish and seafood prepared with
-            Latino – Caribbean flair, and features a wonderful oyster and
-            ceviche bar in front of the open kitchen. In 2003, Aguaviva was
-            named one of the 75 best new restaurants in the world by Conde
-            Nast Traveler magazine.</p>
+        <h1 class="mb-3" th:text="${restaurant.restaurantName}"></h1>
+        <h4 class="mb-3" th:text="${restaurant.address}"></h4>
+        <p th:text="${restaurant.description}"></p>
+        <form id="getback" class="form-group" method="post" th:action="@{restaurantName}" th:object="${reservation}">
+            <label class="form-label">Reserve a table</label>
+            <input type="date" placeholder="Reservation date" id="reservationDate" th:field="*{reservationDate}"/>
+            <input type="time" placeholder="Time" id="startTime" th:field="*{startTime}"/>
+            <input type="number" min="0" placeholder="No. of people" id="people" th:field="*{people}"/>
+            <input class="btn btn-primary" type="submit" value="Reserve a table"/>
+            <input type="hidden" id="email" name="email" th:value="${restaurant.email}"/>
+        </form>
+
     </div>
 
 

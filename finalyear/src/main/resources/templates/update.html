@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Update table</title>
+</head>
+<body>
+
+<form th:action="@{/update}" th:object="${updateTable}" method="post">
+    <table>
+        <tr>
+            <td>Table number</td>
+            <td>Capacity</td>
+            <td>Turnover (minutes)</td>
+            <td>Available</td>
+        </tr>
+        <tr>
+            <input type="hidden" name="id" th:value="${id}">
+            <td><input type="text" name="tableNumber" th:value="${tableNumber}" readonly></td>
+            <td><input type="text" name="capacity" th:value="${capacity}"></td>
+            <td><input type="number" min="0" name="turnover" th:value="${turnover}"></td>
+            <td><input type="checkbox" name="isAvailable" th:checked="${isAvailable}"></td>
+            <td><button type="submit">Update</button></td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

@@ -2,10 +2,11 @@ package com.navikas.finalyear.controllers;
 
 import com.navikas.finalyear.entities.CustomerUser;
 import com.navikas.finalyear.entities.RestaurantUser;
+import com.navikas.finalyear.entities.Tables;
 import com.navikas.finalyear.services.RestaurantProfileService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -31,6 +32,20 @@ public class RestaurantProfileController {
     public String editProfile(RestaurantUser restaurantUser, Principal principal){
         restaurantProfileService.saveProfile(restaurantUser, principal.getName());
         return "redirect:/restaurantProfile";
+    }
+
+    @RequestMapping(value="/tableManagement", method = RequestMethod.GET)
+    public ModelAndView manageTables(Principal principal){
+        //RestaurantUser restaurantUser = restaurantProfileService.findByEmail(principal.getName());
+        return new ModelAndView("tableManagement");
+    }
+
+    @RequestMapping(value="/tableManagement", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody String saveTables(@RequestParam("left") int left, @RequestParam("top") int top, Principal principal){
+        System.out.println(left);
+        System.out.println(top);
+        //RestaurantUser restaurantUser = restaurantProfileService.findByEmail(principal.getName());
+        return "success";
     }
 
 }

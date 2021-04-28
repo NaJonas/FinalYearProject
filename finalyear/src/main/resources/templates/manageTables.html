@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Table management</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"  href="../static/css/bootstrap.min.css" />
+  <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+  <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand">Reservation system</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-end" id="navbar">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/restaurantProfile}">Restaurant profile</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/}">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container py-5">
+    <div class="row">
+    <table class="table-bordered col-6">
+      <tr>
+        <th>Table number</th>
+        <th>Max capacity</th>
+        <th>Turnover (minutes)</th>
+        <th>Is available</th>
+      </tr>
+      <tr th:each="table : ${tables}">
+        <td th:text="${table.tableNumber}"/>
+        <td th:text="${table.capacity}"/>
+        <td th:text="${table.turnover}"/>
+
+        <!--Make read only checkbox -->
+        <td><input type="checkbox" th:checked="${table.isAvailable}"  onclick="return false;"/></td>
+        <td>
+          <form th:action="@{/manageTables}" th:object="${update}" method="post">
+            <input type="hidden" name="turnover" th:value="${table.turnover}">
+            <input type="hidden" name="tableNumber" th:value="${table.tableNumber}">
+            <input type="hidden" name="id" th:value="${table.id}">
+            <input type="hidden" name="capacity" th:value="${table.capacity}">
+            <input type="hidden" name="isAvailable" th:value="${table.isAvailable}">
+            <button type="submit">Update</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+    <form class="col-6" th:action="@{/addTable}" th:object="${addTable}" method="post">
+      <label>Add new table</label>
+        <input class="form-control" type="text"   placeholder="Table number" name="tableNumber" th:value="${tableNumber}">
+        <input class="form-control" type="text"   placeholder="Max capacity" name="capacity" th:value="${capacity}">
+        <input class="form-control" type="number" min="0"   placeholder="Turnover (minutes)" name="turnover" th:value="${turnover}">
+      <button type="submit">Add table</button>
+      </div>
+    </form>
+    <h5>Reservations</h5>
+    <table class="table-bordered">
+      <tr>
+        <th>Table number</th>
+        <th>Reservation date</th>
+        <th>Reservation start time</th>
+        <th>Reservation end time</th>
+        <th>People</th>
+        <th>First Name</th>
+        <th>Last name</th>
+      </tr>
+      <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.tableNumber}"/>
+        <td th:text="${reservation.reservationDate}"/>
+        <td th:text="${reservation.startTime}"/>
+        <td th:text="${reservation.endTime}"/>
+        <td th:text="${reservation.people}"/>
+        <td th:text="${reservation.name}"/>
+        <td th:text="${reservation.surname}"/>
+
+      </tr>
+    </table>
+
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

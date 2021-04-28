@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
+<html lang="en"  xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Search restaurants</title>
+    <title>Customer profile</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css"  href="../static/css/bootstrap.min.css" />
     <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
@@ -33,28 +33,28 @@
   </div>
 </nav>
 <main>
+  <div class="container py-5">
+    <h1 class="text-center">Profile</h1>
+  <table class="table table-striped">
+    <tr>
+      <td>Restaurant</td>
+      <td>Reservation date</td>
+      <td>Reservation time</td>
+    </tr>
+    <tr th:each = "reservation : ${reservations}">
+      <td th:text="${reservation.restaurantName}"/>
+      <td th:text="${reservation.reservationDate}"/>
+      <td th:text="${reservation.startTime}"/>
+      <form th:action="@{/customerProfile}" th:object="${cancel}" method="post">
+      <td><input type="hidden" name="id" th:value="${reservation.id}"></td>
+        <td><button type="submit">Cancel reservation</button></td>
+      </form>
+    </tr>
 
-    <div class="form-group">
-
-        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2  m-0" type="submit">Search</button>
-
-    </div>
-
-    <div class="d-flex justify-content-center mx-auto container ">
-    <div class="row">
-            <div class="card mb-4" style="width: 18rem;" th:each="restaurant : ${restaurants}">
-                <div class="card-body">
-                <h5 class="card-title card-link" th:text = "${restaurant.restaurantName}"></h5>
-                <h9 class="card-subtitle" th:text = "${restaurant.address}"></h9>
-                    <!-- Expression taken from https://stackoverflow.com/questions/52494233/how-to-transfer-parameters-in-thhref-in-spring-boot-thymeleaf -->
-                    <a th:href="@{/restaurantInfo/{restaurantName}(restaurantName = ${restaurant.restaurantName})}" class="stretched-link"></a>
-
-                </div>
-        </div>
-    </div>
-    </div>
+  </table>
+  </div>
 
 </main>
+
 </body>
 </html>
