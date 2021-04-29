@@ -5,6 +5,7 @@ import com.navikas.finalyear.entities.RestaurantUser;
 import com.navikas.finalyear.entities.User;
 import com.navikas.finalyear.repository.CustomerUserRepository;
 import com.navikas.finalyear.repository.RestaurantUserRepository;
+import com.navikas.finalyear.services.CustomerProfileService;
 import com.navikas.finalyear.services.ReservationService;
 import com.navikas.finalyear.services.RestaurantProfileService;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -28,12 +30,14 @@ public class HomeController {
     private RestaurantUserRepository restaurantUserRepository;
     private RestaurantProfileService restaurantProfileService;
     private ReservationService reservationService;
+    private CustomerProfileService customerProfileService;
 
-    public HomeController(CustomerUserRepository customerUserRepository, RestaurantUserRepository restaurantUserRepository, RestaurantProfileService restaurantProfileService, ReservationService reservationService){
+    public HomeController(CustomerUserRepository customerUserRepository, RestaurantUserRepository restaurantUserRepository, RestaurantProfileService restaurantProfileService, ReservationService reservationService, CustomerProfileService customerProfileService){
         this.customerUserRepository = customerUserRepository;
         this.restaurantUserRepository = restaurantUserRepository;
         this.restaurantProfileService = restaurantProfileService;
         this.reservationService = reservationService;
+        this.customerProfileService = customerProfileService;
     }
 
     @RequestMapping("/success.html")
@@ -52,6 +56,14 @@ public class HomeController {
     }
 
 
+    // Listing search results restaurants in a page
+    @RequestMapping(value="/search", method = RequestMethod.GET)
+    public ModelAndView showSearchResults(String searchTerm){
+        List<RestaurantUser> restaurants = restaurantProfileService.getAllBySearch(searchTerm);
+        return new ModelAndView("restaurantList", "restaurants", restaurants);
+    }
+
+
 
     // Listing all restaurants in a page
     @RequestMapping(value="/restaurantList", method = RequestMethod.GET)
@@ -64,6 +76,7 @@ public class HomeController {
         RestaurantUser user = restaurantUserRepository.findByRestaurantName(restaurantName);
         ModelAndView mva = new ModelAndView("restaurantInfo", "restaurant", user);
         mva.addObject("reservation", new Reservation());
+        mva.addObject("menuItems", restaurantProfileService.getMenuItemsByRestaurantName(restaurantName));
         return mva;
     }
     @PostMapping
@@ -71,9 +84,16 @@ public class HomeController {
     public String addReservation(Reservation reservation, Model model, @RequestParam Map<String,String> allParams, @RequestParam(value = "email")String restaurantEmail, Principal principal, RedirectAttributes redirectAttributes){
         boolean response = reservationService.saveReservation(reservation, restaurantEmail, principal.getName());
         String restaurantName = restaurantProfileService.findByEmail(restaurantEmail).getRestaurantName();
-        if (response == false) {
-            redirectAttributes.addFlashAttribute("error", "No available bookings during this time");
+        // If not a logged in user
+        if (principal == null){
+            return "redirect:/login";
         }
-        return "redirect:/restaurantInfo/" + restaurantName;
+        // If there are no available tables
+        if (response == false) {
+            redirectAttributes.addFlashAttribute("error", "No available tables during this time");
+            return "redirect:/restaurantInfo/" + restaurantName;
+
+        }
+        return "redirect:/customerProfile";
     }
 }

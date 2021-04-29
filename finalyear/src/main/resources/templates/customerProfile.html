@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"  xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Customer profile</title>
@@ -10,11 +10,18 @@
     <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
 </head>
 <body>
+<!--navigation redone from https://getbootstrap.com/docs/4.0/examples/jumbotron/ -->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <a class="navbar-brand" href="#">Reservation system</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
+
+  <http auto-config="true" use-expressions="true">
+    <logout logout-url="/logout" />
+  </http>
+
 
   <div class="collapse navbar-collapse justify-content-end" id="navbar">
     <ul class="navbar-nav mr-auto">
@@ -24,16 +31,18 @@
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" th:href="@{/register}">Register</a>
+        <a class="nav-link" th:href="@{/logout}">Logout</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/login}">Login</a>
+      <li class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link" th:href="@{customerProfile}" >Profile</a>
       </li>
     </ul>
   </div>
 </nav>
 <main>
   <div class="container py-5">
+    <p class="alert-success" th:text="${success}" th:if="${success}"></p>
+
     <h1 class="text-center">Profile</h1>
   <table class="table table-striped">
     <tr>
@@ -52,6 +61,24 @@
     </tr>
 
   </table>
+
+    <form th:action="@{/changePassword}" th:object="${password}" method="post">
+      <label class="h5">Change password</label>
+      <input class="form-control" type="password"   placeholder="New password" name="password">
+      <button type="submit">Change password</button>
+    </form>
+
+    <script>
+      function alertBox() {
+        window.alert("Are you sure?");
+      };
+    </script>
+    <label class="h5 mt-5">Delete user account</label>
+    <form th:action="@{/deleteAccount}" th:object="${account}" method="post">
+      <button type="submit" onclick="alertBox()">Delete account</button>
+    </form>
+
+  </div>
   </div>
 
 </main>

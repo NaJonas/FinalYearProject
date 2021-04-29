@@ -1,5 +1,6 @@
 package com.navikas.finalyear.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
@@ -14,27 +15,36 @@ public class RestaurantUser extends User{
     private Boolean isAuthorized;
 
     private String restaurantName;
+    @Column(length = 3000)
     private String description;
     private String address;
-    @OneToMany(mappedBy = "restaurantUser")
-    private List<MenuSection> menuSectionList;
     @OneToMany(mappedBy = "restaurant")
     private List<Tables> tablesList;
     @OneToMany(mappedBy = "restaurant")
     private List<Reservation> reservationList;
+    @OneToMany(mappedBy = "restaurant")
+    private List<MenuItem> menuItemList;
 
 
-    public RestaurantUser(String email, String password, String companyName, Boolean isAuthorized, String restaurantName, String description, String address, List<MenuSection> menuSections,
-                            List<Tables> tablesList, List<Reservation> reservationList) {
+    public RestaurantUser(String email, String password, String companyName, Boolean isAuthorized, String restaurantName, String description, String address,
+                            List<Tables> tablesList, List<Reservation> reservationList, List<MenuItem> menuItemList) {
         super(email, password);
         this.companyName = companyName;
         this.isAuthorized = isAuthorized;
         this.restaurantName = restaurantName;
         this.description = description;
         this.address = address;
-        this.menuSectionList = menuSections;
         this.tablesList = tablesList;
         this.reservationList = reservationList;
+        this.menuItemList = menuItemList;
+    }
+
+    public List<MenuItem> getMenuItemList() {
+        return menuItemList;
+    }
+
+    public void setMenuItemList(List<MenuItem> menuItemList) {
+        this.menuItemList = menuItemList;
     }
 
     public List<Reservation> getReservationList() {
@@ -69,13 +79,7 @@ public class RestaurantUser extends User{
         this.address = address;
     }
 
-    public List<MenuSection> getMenuSectionList() {
-        return menuSectionList;
-    }
 
-    public void setMenuSectionList(List<MenuSection> menuSectionList) {
-        this.menuSectionList = menuSectionList;
-    }
 
     public RestaurantUser() {
 

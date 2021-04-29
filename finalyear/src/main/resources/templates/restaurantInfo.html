@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:background-image="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:background-image="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Restaurant info</title>
@@ -9,6 +9,12 @@
     <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
 </head>
+
+<http auto-config="true" use-expressions="true">
+    <logout logout-url="/logout" />
+</http>
+
+<!--navigation redone from https://getbootstrap.com/docs/4.0/examples/jumbotron/ -->
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <a class="navbar-brand" href="#">Reservation system</a>
@@ -23,12 +29,18 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
         <a class="nav-link" th:href="@{/register}">Register</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
         <a class="nav-link" th:href="@{/login}">Login</a>
       </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/customerProfile}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <logout><a class="nav-link" th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></logout>
+        </li>
     </ul>
   </div>
 </nav>
@@ -48,6 +60,25 @@
         <h1 class="mb-3" th:text="${restaurant.restaurantName}"></h1>
         <h4 class="mb-3" th:text="${restaurant.address}"></h4>
         <p th:text="${restaurant.description}"></p>
+
+        <!-- Collapsable menu adapted from https://getbootstrap.com/docs/4.0/components/collapse/  -->
+        <div id="accordion">
+            <div class="card" th:each="menuItem : ${menuItems}">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-light" th:text="${menuItem.itemName} + '  ' + ${menuItem.price}" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body" th:text="${menuItem.description}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <form id="getback" class="form-group" method="post" th:action="@{restaurantName}" th:object="${reservation}">
             <label class="form-label">Reserve a table</label>
             <input type="date" placeholder="Reservation date" id="reservationDate" th:field="*{reservationDate}"/>
@@ -56,6 +87,9 @@
             <input class="btn btn-primary" type="submit" value="Reserve a table"/>
             <input type="hidden" id="email" name="email" th:value="${restaurant.email}"/>
         </form>
+
+
+
 
     </div>
 

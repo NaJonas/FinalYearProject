@@ -52,20 +52,18 @@ public class ReservationServiceImpl implements ReservationService{
             // Check if the table's max capacity is lower than the people in the booking
             if (table.getCapacity() < reservation.getPeople()){
                 iterator.remove();
+                continue;
             }
             // Get reservation end time for this particular table
             LocalTime reservationEndTime = reservationStartTime.plusMinutes(table.getTurnover());
             // Get all table reservations
             List<Reservation> reservationList = table.getReservations();
             for (Reservation r : reservationList){
-                System.out.println(r.getStartTime());
                 // If the reservation date from the database is the same as the reservation date the customer is trying to make
                 if (r.getReservationDate().equals(reservationDate)){
                     // Boolean values for checking if the current reservation overlaps with a reservation from the database
                     boolean lessThan = reservationEndTime.isBefore(r.getStartTime()) || reservationEndTime.equals(r.getStartTime());
                     boolean moreThan = reservationStartTime.isAfter(r.getEndTime()) || reservationStartTime.equals(r.getEndTime());
-                    System.out.println(lessThan);
-                    System.out.println(moreThan);
                     //if (reservationEndTime <= r.getStartTime() || reservationStartTime >= r.getEndTime())
                     if (!(lessThan || moreThan)){
                         iterator.remove();
@@ -74,9 +72,7 @@ public class ReservationServiceImpl implements ReservationService{
                 }
             }
         }
-        for (Tables table : tableList){
-            System.out.println(table.getId());
-        }
+
         if (tableList.isEmpty()){
             return false;
         }

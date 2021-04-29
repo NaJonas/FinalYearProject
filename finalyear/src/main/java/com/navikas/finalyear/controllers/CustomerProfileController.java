@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -25,10 +26,7 @@ public class CustomerProfileController {
         // Get the logged in customer entity
         CustomerUser customerUser = customerProfileService.findByEmail(principal.getName());
         List<TempReservation> reservations = customerProfileService.getCustomerReservations(principal.getName());
-        for (TempReservation tmp : reservations){
-            System.out.println(tmp.getId());
 
-        }
         ModelAndView modelAndView = new ModelAndView("customerProfile", "reservations", reservations);
         return modelAndView;
     }
@@ -37,5 +35,16 @@ public class CustomerProfileController {
     public String cancelReservation(Principal principal, TempReservation reservation){
         customerProfileService.deleteReseration(reservation.getId());
         return "redirect:/customerProfile";
+    }
+    @RequestMapping(value="/changePassword", method = RequestMethod.POST)
+    public String changePassword(Principal principal, String password, RedirectAttributes redirectAttributes){
+        customerProfileService.changePassword(principal.getName(), password);
+        redirectAttributes.addFlashAttribute("success", "Password has been changed successfully");
+        return "redirect:/customerProfile";
+    }
+    @RequestMapping(value="/deleteAccount", method = RequestMethod.POST)
+    public String deleteUser(Principal principal){
+        customerProfileService.deleteUser(principal.getName());
+        return "redirect:/";
     }
 }

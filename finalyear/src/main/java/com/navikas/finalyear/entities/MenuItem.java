@@ -4,20 +4,24 @@ package com.navikas.finalyear.entities;
 import javax.persistence.*;
 
 @Entity
-public class Item {
+public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String itemName;
+    @Column(length = 3000)
     private String description;
+    private String price;
     @ManyToOne
-    @JoinColumn(name="restaurant_email")
-    private MenuSection menuSection;
+    @JoinColumn(name = "restaurant_email")
+    private RestaurantUser restaurant;
 
-    public Item(String email, String itemName, String description, MenuSection menuSection) {
+
+    public MenuItem(String email, String itemName, String description, String price, RestaurantUser restaurantUser) {
         this.itemName = itemName;
         this.description = description;
-        this.menuSection = menuSection;
+        this.price = price;
+        this.restaurant = restaurantUser;
     }
 
     public Long getId() {
@@ -28,20 +32,26 @@ public class Item {
         this.id = id;
     }
 
-    public MenuSection getMenuSection() {
-        return menuSection;
-    }
 
-    public void setMenuSection(MenuSection menuSection) {
-        this.menuSection = menuSection;
-    }
-
-    public Item() {
+    public MenuItem() {
 
     }
 
+    public RestaurantUser getRestaurant() {
+        return restaurant;
+    }
 
+    public void setRestaurant(RestaurantUser restaurant) {
+        this.restaurant = restaurant;
+    }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public String getItemName() {
         return itemName;

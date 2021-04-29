@@ -10,5 +10,7 @@ public interface CustomerProfileService{
     List<TempReservation> getCustomerReservations(String customerEmail);
     CustomerUser findByEmail(String email);
     void deleteReseration(Long id);
-
+    boolean isLoggedIn(String customerEmail);
+    void changePassword(String customerEmail, String password);
+    void deleteUser(String customerEmail);
 }

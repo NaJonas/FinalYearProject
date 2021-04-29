@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Table management</title>
@@ -9,7 +9,12 @@
   <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
   <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
 </head>
+
+<http auto-config="true" use-expressions="true">
+  <logout logout-url="/logout" />
+</http>
 <body>
+<!--navigation redone from https://getbootstrap.com/docs/4.0/examples/jumbotron/ -->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <a class="navbar-brand">Reservation system</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,9 +28,14 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
+
       <li class="nav-item">
-        <a class="nav-link" th:href="@{/}">Logout</a>
+        <a class="nav-link" th:href="@{/manageTables}">Tables/Reservations</a>
       </li>
+      <li class="nav-item">
+        <logout><a class="nav-link" th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></logout>
+      </li>
+
     </ul>
   </div>
 </nav>

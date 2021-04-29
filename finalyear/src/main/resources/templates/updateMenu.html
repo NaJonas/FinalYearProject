@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Update menu item</title>
+</head>
+<body>
+
+<form th:action="@{/editMenu}" th:object="${updateMenu}" method="post">
+  <table>
+    <tr>
+      <td>Menu item name</td>
+      <td>Price</td>
+      <td>Description</td>
+    </tr>
+    <tr>
+      <input type="hidden" name="id" th:value="${id}">
+      <td><input type="text" name="itemName" th:value="${itemName}" readonly></td>
+      <td><input type="text" name="price" th:value="${price}"></td>
+      <td><input type="text" name="description" th:value="${description}"></td>
+      <td><button type="submit">Update</button></td>
+    </tr>
+  </table>
+</form>
+
+</body>
+</html>

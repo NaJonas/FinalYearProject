@@ -1,9 +1,11 @@
 package com.navikas.finalyear.services;
 
 import com.navikas.finalyear.additionalclasses.TempReservation;
+import com.navikas.finalyear.entities.MenuItem;
 import com.navikas.finalyear.entities.Reservation;
 import com.navikas.finalyear.entities.RestaurantUser;
 import com.navikas.finalyear.entities.Tables;
+import com.navikas.finalyear.repository.MenuItemRepository;
 import com.navikas.finalyear.repository.ReservationRepository;
 import com.navikas.finalyear.repository.RestaurantUserRepository;
 import com.navikas.finalyear.repository.TableRepository;
@@ -20,12 +22,14 @@ public class RestaurantProfileServiceImpl implements RestaurantProfileService{
     private RestaurantUserRepository restaurantUserRepository;
     private TableRepository tableRepository;
     private ReservationRepository reservationRepository;
+    private MenuItemRepository menuItemRepository;
 
     @Autowired
-    public RestaurantProfileServiceImpl(RestaurantUserRepository restaurantUserRepository, TableRepository tableRepository, ReservationRepository reservationRepository){
+    public RestaurantProfileServiceImpl(RestaurantUserRepository restaurantUserRepository, TableRepository tableRepository, ReservationRepository reservationRepository, MenuItemRepository menuItemRepository){
         this.restaurantUserRepository = restaurantUserRepository;
         this.tableRepository = tableRepository;
         this.reservationRepository = reservationRepository;
+        this.menuItemRepository = menuItemRepository;
     }
 
     @Override
@@ -87,6 +91,27 @@ public class RestaurantProfileServiceImpl implements RestaurantProfileService{
         }
         return tempList;
     }
+
+    @Override
+    public void addMenuItem(String restaurantEmail, MenuItem menuItem){
+        menuItem.setRestaurant(restaurantUserRepository.findById(restaurantEmail).orElse(null));
+        menuItemRepository.save(menuItem);
+    }
+    @Override
+    public List<MenuItem> getMenuItems(String restaurantEmail){
+        return menuItemRepository.findAllByRestaurantEmail(restaurantEmail);
+    }
+
+    @Override
+    public List<MenuItem> getMenuItemsByRestaurantName(String restaurantName){
+        return menuItemRepository.findAllByRestaurantRestaurantName(restaurantName);
+    }
+    @Override
+    public List<RestaurantUser> getAllBySearch(String restaurantName){
+        return restaurantUserRepository.findAllByRestaurantNameContainsIgnoreCase(restaurantName);
+    }
+
+
 
 
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Search restaurants</title>
@@ -9,6 +9,12 @@
     <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
 </head>
+
+<http auto-config="true" use-expressions="true">
+    <logout logout-url="/logout" />
+</http>
+
+<!--navigation redone from https://getbootstrap.com/docs/4.0/examples/jumbotron/ -->
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <a class="navbar-brand" href="#">Reservation system</a>
@@ -23,12 +29,18 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
         <a class="nav-link" th:href="@{/register}">Register</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
         <a class="nav-link" th:href="@{/login}">Login</a>
       </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{customerProfile}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <logout><a class="nav-link" th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></logout>
+        </li>
     </ul>
   </div>
 </nav>
@@ -36,8 +48,10 @@
 
     <div class="form-group">
 
-        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2  m-0" type="submit">Search</button>
+        <form th:action="@{/search}" method="get">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchTerm">
+            <button class="btn btn-outline-success my-2  m-0" type="submit">Search</button>
+        </form>
 
     </div>
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Restaurant reservation system</title>
@@ -9,12 +9,12 @@
     <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.6.0-1/js/bootstrap.min.js}"></script>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Reservation system</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <http auto-config="true" use-expressions="true">
+        <logout logout-url="/logout" />
+    </http>
 
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <!-- Jumbotron and navigation redone from https://getbootstrap.com/docs/4.0/examples/jumbotron/ -->
         <div class="collapse navbar-collapse justify-content-end" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -22,11 +22,17 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <a class="nav-link" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{customerProfile}" >Profile</a>
+                </li>
+                <li class="nav-item">
+                    <logout><a class="nav-link" th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></logout>
                 </li>
             </ul>
         </div>
@@ -38,9 +44,12 @@
             <h1 class="display-3">Reserve a table</h1>
             <p>Search for a restaurant</p>
                 <div class="form-group">
-
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                 <form th:action="@{/search}" method="get">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchTerm">
                     <button class="btn btn-outline-success my-2  m-0" type="submit">Search</button>
+                 </form>
+                    <a th:href="@{/restaurantList}"><button class="btn btn-outline-success my-2  m-0" th:href="@{/restaurantList}">All restaurants</button></a>
+
 
                 </div>
 

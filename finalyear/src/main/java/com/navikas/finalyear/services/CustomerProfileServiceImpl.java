@@ -54,5 +54,27 @@ public class CustomerProfileServiceImpl implements CustomerProfileService{
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         reservationRepository.delete(reservation);
     }
+    @Override
+    public boolean isLoggedIn(String customerEmail){
+        return customerUserRepository.findById(customerEmail).isPresent();
+    }
+    @Override
+    public void changePassword(String customerEmail, String password){
+        CustomerUser user = customerUserRepository.findById(customerEmail).orElse(null);
+        user.setPassword(password);
+        customerUserRepository.save(user);
+    }
+    @Override
+    public void deleteUser(String customerEmail){
+        List<Reservation> reservations = reservationRepository.findAllByCustomerEmail(customerEmail);
+        // Delete all reservations first then delete the user account
+        for (Reservation reservation : reservations){
+            reservationRepository.delete(reservation);
+        }
+        customerUserRepository.delete(customerUserRepository.findById(customerEmail).orElse(null));
+    }
+
+
+
 
 }
