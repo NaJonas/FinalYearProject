@@ -19,4 +19,5 @@ public interface RestaurantProfileService {
     List<MenuItem> getMenuItems(String restaurantEmail);
     List<MenuItem> getMenuItemsByRestaurantName(String restaurantName);
     List<RestaurantUser> getAllBySearch(String restaurantName);
+    void authorizeRestaurant(String restaurantEmail);
 }

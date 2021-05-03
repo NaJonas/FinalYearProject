@@ -27,12 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "  SELECT a.email, a.password, 'TRUE' as enabled FROM customer_user a  \n" +
                         "  UNION  \n" +
                         "  SELECT a.email, a.password, 'TRUE' as enabled FROM restaurant_user a  \n" +
+                        "  UNION  \n" +
+                        "  SELECT a.email, a.password, 'TRUE' as enabled FROM admin a  \n" +
                         ") A\n" +
                         "WHERE email =? ")
                 .authoritiesByUsernameQuery("SELECT * FROM (\n" +
                         "  SELECT a.email, 'ROLE_USER' as authority FROM customer_user a  \n" +
                         "  UNION  \n" +
                         "  SELECT a.email, 'ROLE_USER' FROM restaurant_user a  \n" +
+                        "  UNION  \n" +
+                        "  SELECT a.email, 'ROLE_USER' FROM admin a  \n" +
                         ") A\n" +
                         "WHERE email =? ")
                 .passwordEncoder(new BCryptPasswordEncoder());
@@ -45,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/register").permitAll()
+                .antMatchers("/register", "/", "/restaurantList", "restaurantInfo").permitAll()
                 .and()
                 .formLogin()
                     .defaultSuccessUrl("/success.html", true);

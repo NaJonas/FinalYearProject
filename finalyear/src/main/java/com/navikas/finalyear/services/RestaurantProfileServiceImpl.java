@@ -108,8 +108,18 @@ public class RestaurantProfileServiceImpl implements RestaurantProfileService{
     }
     @Override
     public List<RestaurantUser> getAllBySearch(String restaurantName){
-        return restaurantUserRepository.findAllByRestaurantNameContainsIgnoreCase(restaurantName);
+        return restaurantUserRepository.findAllByRestaurantNameContainsIgnoreCaseAndIsAuthorized(restaurantName, true);
     }
+    @Override
+    public void authorizeRestaurant(String restaurantEmail){
+        RestaurantUser restaurant = restaurantUserRepository.findById(restaurantEmail).orElse(null);
+        if (restaurant.getIsAuthorized() == false) {
+            restaurant.setIsAuthorized(true);
+        }
+        else restaurant.setIsAuthorized(false);
+        restaurantUserRepository.save(restaurant);
+    }
+
 
 
 

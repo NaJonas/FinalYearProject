@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xlmns:th="http://www.thymeleaf.org" xmlns:xlmns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:background-image="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.w3.org/1999/xhtml"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Restaurant info</title>
@@ -49,12 +49,12 @@
     <style th:inline="text">
         .jumbotron {
             min-height: 600px;
-            background-size: 100% auto;
+            background-size: cover;
         }
     </style>
     <div class="container py-5">
         <p class="alert-danger" th:text="${error}" th:if="${error}"></p>
-    <div class="jumbotron min-height bg-image" style="background-image: url('../static/temp.jpeg');" th:style="'background:url(' + @{/temp.jpeg} + ');'">
+    <div class="jumbotron min-height bg-image" style="background-image: url('../static/temp2.jpeg');" th:style="'background:url(' + @{/temp2.jpeg} + '); background-size: cover;'">
 
     </div>
         <h1 class="mb-3" th:text="${restaurant.restaurantName}"></h1>
@@ -81,9 +81,9 @@
 
         <form id="getback" class="form-group" method="post" th:action="@{restaurantName}" th:object="${reservation}">
             <label class="form-label">Reserve a table</label>
-            <input type="date" placeholder="Reservation date" id="reservationDate" th:field="*{reservationDate}"/>
-            <input type="time" placeholder="Time" id="startTime" th:field="*{startTime}"/>
-            <input type="number" min="0" placeholder="No. of people" id="people" th:field="*{people}"/>
+            <input type="date" required="required" placeholder="Reservation date" id="reservationDate" th:field="*{reservationDate}"/>
+            <input type="time" required="required" placeholder="Time" id="startTime" th:field="*{startTime}"/>
+            <input type="number" required="required" min="0" placeholder="No. of people" id="people" th:field="*{people}"/>
             <input class="btn btn-primary" type="submit" value="Reserve a table"/>
             <input type="hidden" id="email" name="email" th:value="${restaurant.email}"/>
         </form>

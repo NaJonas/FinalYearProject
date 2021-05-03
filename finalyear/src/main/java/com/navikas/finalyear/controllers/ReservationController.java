@@ -1,61 +1,49 @@
 package com.navikas.finalyear.controllers;
 
+import com.navikas.finalyear.entities.Reservation;
 import com.navikas.finalyear.entities.RestaurantUser;
 import com.navikas.finalyear.entities.Tables;
+import com.navikas.finalyear.services.ReservationService;
 import com.navikas.finalyear.services.RestaurantProfileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
+/*
+    Controller to process reservation
+ */
 @Controller
 public class ReservationController {
     RestaurantProfileService restaurantProfileService;
+    ReservationService reservationService;
 
-    public ReservationController(RestaurantProfileService restaurantProfileService) {
+    public ReservationController(RestaurantProfileService restaurantProfileService, ReservationService reservationService) {
         this.restaurantProfileService = restaurantProfileService;
+        this.reservationService = reservationService;
     }
 
-    @RequestMapping(value = "/manageTables", method = RequestMethod.GET)
-    public ModelAndView showTableManagement(Principal principal, Model model) {
-        // Get the logged in restaurant entity and show it on the web page
-        List<Tables> tablesList = restaurantProfileService.getTables(principal.getName());
-        ModelAndView modelAndView = new ModelAndView("manageTables", "tables", tablesList);
-        modelAndView.addObject("addTable", new Tables());
-        modelAndView.addObject("reservations", restaurantProfileService.getReservationsForProfile(principal.getName()));
-        return modelAndView;
-    }
+    // Reservation controller method, that calls reservations service where the algorithm is. Based on a response, make a reservation or show error message
+    @PostMapping
+    @RequestMapping(value="/restaurantInfo/{restaurantName}", method = RequestMethod.POST)
+    public String addReservation(Reservation reservation, Model model, @RequestParam Map<String,String> allParams, @RequestParam(value = "email")String restaurantEmail, Principal principal, RedirectAttributes redirectAttributes){
+        boolean response = reservationService.saveReservation(reservation, restaurantEmail, principal.getName());
+        String restaurantName = restaurantProfileService.findByEmail(restaurantEmail).getRestaurantName();
+        // If not a logged in user
+        if (principal == null){
+            return "redirect:/login";
+        }
+        // If there are no available tables
+        if (response == false) {
+            redirectAttributes.addFlashAttribute("error", "No available tables during this time");
+            return "redirect:/restaurantInfo/" + restaurantName;
 
-    @RequestMapping(value="/manageTables", method = RequestMethod.POST)
-    public String editTables(Tables table, RedirectAttributes redirectAttributes){
-        // Send table attributes to the redirect page
-        redirectAttributes.addFlashAttribute("turnover", table.getTurnover());
-        redirectAttributes.addFlashAttribute("tableNumber", table.getTableNumber());
-        redirectAttributes.addFlashAttribute("id",table.getId());
-        redirectAttributes.addFlashAttribute("capacity", table.getCapacity());
-        redirectAttributes.addFlashAttribute("isAvailable", table.getIsAvailable());
-        return "redirect:/update";
-    }
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public ModelAndView updateTable(Model model) {
-        return new ModelAndView("update","updateTable", new Tables());
-    }
-
-    @RequestMapping(value="/update", method = RequestMethod.POST)
-    public String editTable(Tables table, Principal principal){
-        restaurantProfileService.updateTable(table, principal.getName());
-
-        return "redirect:/manageTables";
-    }
-    @RequestMapping(value="/addTable", method = RequestMethod.POST)
-    public String addTable(Tables table, Principal principal){
-        restaurantProfileService.saveTable(table, restaurantProfileService.findByEmail(principal.getName()));
-        return "redirect:/manageTables";
+        }
+        return "redirect:/customerProfile";
     }
 }

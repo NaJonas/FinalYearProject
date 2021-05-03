@@ -22,19 +22,19 @@
             document.getElementById("registrationForm").insertRow(3).innerHTML =
                 '                <tr>\n' +
                 '                        <td><label>First Name:</label></td>\n' +
-                '                        <td><input type="text" name="name"/></td>\n' +
+                '                        <td><input type="text" name="name" required="required"/></td>\n' +
                 '                 </tr>';
             document.getElementById("registrationForm").insertRow(4).innerHTML =
                 '              <tr>\n' +
                 '                     <td><label>Last Name:</label></td>\n' +
-                '                     <td><input type="text"  name="surname"/></td>\n' +
+                '                     <td><input type="text"  name="surname" required="required"/></td>\n' +
                 '                 </tr>';
         }
         else if (x.value == "Restaurant") {
             document.getElementById("registrationForm").insertRow(3).innerHTML =
                 '                <tr>\n' +
                 '                        <td><label>Company name:</label></td>\n' +
-                '                        <td><input type="text" name="companyName"/></td>\n' +
+                '                        <td><input type="text" name="companyName" required="required"/></td>\n' +
                 '                 </tr>';
         }
 

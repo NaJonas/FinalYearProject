@@ -24,6 +24,8 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public void registerRestaurantUser(RestaurantUser user){
+        // Default authorization - false
+        user.setIsAuthorized(false);
         restaurantUserRepository.save(user);
     }
     @Override

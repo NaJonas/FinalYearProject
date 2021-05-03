@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -40,23 +41,20 @@ public class UserRegistrationController {
     }
     // Register new user and redirect to /index
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String processRegistration(CustomerUser user, RestaurantUser rUser, @Valid String role){
+    public String processRegistration(CustomerUser user, RestaurantUser rUser, @Valid String role, RedirectAttributes redirectAttributes){
         // https://stackoverflow.com/questions/58795016/how-do-i-pass-the-selected-dropdown-value-to-a-controller-in-thymeleaf
         // Checks the role chosen and registers appropriate type of user
 
         if (userService.alreadyExist(user.getEmail())){
-            // Already exists. UPDATE!!!!!!!!!!!!!!!!
+            redirectAttributes.addFlashAttribute("error", "Account already exists with this email");
             return "redirect:/register";
         }
         else {
 
             if (role.equals("Customer")) {
-                System.out.println(userService.alreadyExist(user.getEmail()));
                 userService.registerCustomerUser(user);
-                System.out.println("Customer account created");
                 return "redirect:/";
             } else if (role.equals("Restaurant")) {
-                System.out.println(userService.alreadyExist(user.getEmail()));
                 userService.registerRestaurantUser(rUser);
                 return "redirect:/";
 

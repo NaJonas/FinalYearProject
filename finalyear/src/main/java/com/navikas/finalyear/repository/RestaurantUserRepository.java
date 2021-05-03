@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface RestaurantUserRepository extends JpaRepository<RestaurantUser, String> {
     RestaurantUser findByRestaurantName(String restaurantName);
-    List<RestaurantUser> findAllByRestaurantNameContainsIgnoreCase(String searchTerm);
+    List<RestaurantUser> findAllByRestaurantNameContainsIgnoreCaseAndIsAuthorized(String searchTerm, boolean authorized);
+    List<RestaurantUser> findAllByIsAuthorized(boolean authorized);
 }

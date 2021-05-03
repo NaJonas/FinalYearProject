@@ -39,6 +39,7 @@ public class RestaurantUser extends User{
         this.menuItemList = menuItemList;
     }
 
+
     public List<MenuItem> getMenuItemList() {
         return menuItemList;
     }
@@ -85,6 +86,9 @@ public class RestaurantUser extends User{
 
     }
 
+    public Boolean getIsAuthorized() {return isAuthorized;}
+
+    public void setIsAuthorized(Boolean authorized) {isAuthorized = authorized;}
 
     public String getCompanyName() {
         return companyName;
